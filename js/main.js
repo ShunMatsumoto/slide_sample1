@@ -18,7 +18,7 @@ $(function() {
         currentIndex = 0,
         duration = 500,
         easing = 'easeInOutExpo',
-        interval = 7500,
+        interval = 4000,
         timer;
 
         //スライドの配置と、インジケーターの生成と挿入
@@ -56,6 +56,21 @@ $(function() {
               $indicator.find('a').removeClass('active').eq(currentIndex).addClass('active');
         }
 
+        //タイマーを開始する関数
+        function startTimer () {
+          timer = setInterval(function () {
+            var nextIndex = (currentIndex + 1) % slideCount;
+            goToSlide(nextIndex);
+          }, interval);
+        }
+
+        //タイマーを停止する関数
+        function stopTimer () {
+          clearInterval(timer);
+        }
+
+        $container.on( { mouseenter: stopTimer, mouseleave: startTimer } );
+
         $nav.on('click', 'a', function (event) {
           event.preventDefault();
           if ($(this).hasClass('prev')) {
@@ -71,5 +86,9 @@ $(function() {
             goToSlide($(this).index());
           }
         });
+
+        goToSlide(currentIndex);
+
+        startTimer();
   });
 });
