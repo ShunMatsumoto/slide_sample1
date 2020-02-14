@@ -10,7 +10,7 @@ $(function() {
     var $container = $(this),
         $slideGroup = $container.find('.slideshow-slides'),
         $slides = $slideGroup.find('.slide'),
-        $nav = $container.find('.sideshow-nav'),
+        $nav = $container.find('.slideshow-nav'),
         $indicator = $container.find('.slideshow-indicator'),
 
         slideCount = $slides.length,
@@ -36,6 +36,40 @@ $(function() {
         }
 
         //ナビゲーションとインジケーターの状態を更新する関数を定義する
-        
+        function updateNav () {
+          var $navPrev = $nav.find('.prev'),
+              $navNext = $nav.find('.next');
+
+              if (currentIndex === 0) {
+                $navPrev.addClass('disabled');
+              } else {
+                $navPrev.removeClass('disabled');
+              }
+
+              if (currentIndex === slideCount - 1) {
+                $navNext.addClass('disabled');
+              } else {
+                $navNext.removeClass('disabled');
+              }
+
+              //現在のスライドのインジケーターを無効にする
+              $indicator.find('a').removeClass('active').eq(currentIndex).addClass('active');
+        }
+
+        $nav.on('click', 'a', function (event) {
+          event.preventDefault();
+          if ($(this).hasClass('prev')) {
+            goToSlide(currentIndex - 1);
+          } else {
+            goToSlide(currentIndex + 1);
+          }
+        });
+
+        $indicator.on('click', 'a', function (event) {
+          event.preventDefault();
+          if (!$(this).hasClass('active')) {
+            goToSlide($(this).index());
+          }
+        });
   });
 });
